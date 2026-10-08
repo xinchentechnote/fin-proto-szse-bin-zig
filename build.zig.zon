@@ -1,0 +1,16 @@
+.{
+    .name = .szse_binary,
+    .version = "0.1.0",
+    .fingerprint = 0x1eb61078feebde17, // Derived from the package name by zig; do not copy between packages.
+    .minimum_zig_version = "0.17.0",
+    .dependencies = .{
+        .binary_codec = .{ .path = "../fin-proto-runtime-bin-zig" },
+    },
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
+        "proto",
+        "examples",
+    },
+}
