@@ -22,6 +22,24 @@ pub fn build(b: *std.Build) void {
     const test_step = b.step("test", "Run tests");
     test_step.dependOn(&run_mod_tests.step);
 
+    const bench = b.addExecutable(.{
+        .name = "bench",
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("bench/bench.zig"),
+            .target = target,
+            .optimize = optimize,
+            .imports = &.{
+                .{ .name = "szse_binary", .module = mod },
+                .{ .name = "binary_codec", .module = codec_mod },
+            },
+        }),
+    });
+    bench.root_module.link_libc = true;
+    b.installArtifact(bench);
+    const run_bench = b.addRunArtifact(bench);
+    const bench_step = b.step("bench", "Run encode/decode benchmarks");
+    bench_step.dependOn(&run_bench.step);
+
     const example = b.addExecutable(.{
         .name = "basic",
         .root_module = b.createModule(.{
