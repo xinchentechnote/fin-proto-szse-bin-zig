@@ -14,11 +14,14 @@ make compile    # fin-protoc -f proto/szse_bin_v1.29.pdsl -z src/
 ## 协议要点
 
 - 全部大端;字符串/数组长度前缀为 `u32`
-- 根包 `SzseBinary`:`MsgType` → 24 种 `Body` 消息(含 `[100101, ...]` 多值列表键),
+- 根包 `SzseBinary`:`MsgType` → 14 种 `Body` 消息(部分 `MsgType` 为 `[100101, ...]`
+  多值列表键,共 77 个键),
   `BodyLength` 由 `@lengthOf` 回填,`int32 Checksum` 用 `SZSE_BIN` 算法
   (逐字节 i32 累加 mod 256,可为负)
 - `NewOrder`/`ExecutionConfirm`/`ExecutionReport` 内含 `match ApplID as ApplExtend`
-  字符串键多态分发(共 60 余种 Extend 报文),对应 Zig tagged union
+  字符串键多态分发(生成 54 种 Extend 扩展体,其中 NewOrder 19 种、
+  ExecutionConfirm 19 种、ExecutionReport 11 种经 match 引用,其余为规范预留),
+  对应 Zig tagged union
 - `ReportSynchronization`/`PlatformInfo` 含 `repeat` 对象列表
 
 ## 使用
